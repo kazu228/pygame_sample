@@ -46,13 +46,15 @@ class Player(Flyer):
             pygame.sprite.Sprite.remove(self)
 
     def shoot(self, screen):
-        class Bullet(object):
+        class Bullet(object):  #objectは何？
             def __init__(self, x: int, y: int):
                 self.bullet = Rect(x, y, 10, 20)  #弾の形
-                
+
             def draw(self):
                 pygame.draw.rect(screen, (255, 0, 0), self.bullet)  #数字は色
-            
+                tama_iti = self.bullet.left + self.bullet.right / 2
+                return tama_iti
+
             def move(self, x: int=0, y: int=-5):  #動く方向
                 self.bullet.move_ip(x, y)
 
@@ -68,12 +70,16 @@ class Enemy(Flyer):
         super().__init__(filename, x, y, vx, vy)
 
     def move(self):
+        xy = []
         # img_rect = self.image.get_rect()
         # img_rect.move_ip(self.vx, self.vy)
         self.rect.move_ip(self.vx, self.vy)
         self.rect = self.rect.clamp(SCREEN)
         if self.rect.left < 110 or self.rect.right > 700:
             self.vx = -self.vx
+        xy.append(self.rect.left)
+        xy.append(self.rect.right)
+        return xy
         # if img_rect.top < 0 or img_rect.bottom > 500:
         #     vy = -vy
         # self.rect.move_ip(self.vx, self.vy)
@@ -93,6 +99,8 @@ def main():
         player.move()
         enemy1.move()
         enemy2.move()
+        xy1 = enemy1.move()
+        xy2 = enemy2.move()
         player.draw(screen)
         enemy1.draw(screen)
         enemy2.draw(screen)
@@ -101,6 +109,8 @@ def main():
         for bullet in bullet_list:
             bullet.move()
             bullet.draw()
+            if bullet.draw() > xy1[0] and bullet.draw() < xy1[1]:
+                pass #ここから＊＊＊＊＊＊＊＊＊＊＊
         #リストからスクリーン範囲外のbulletをクリーンアップ
         bullet_list = list(filter(lambda x: not x.is_destroy, bullet_list))
 
