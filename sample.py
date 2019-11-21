@@ -87,6 +87,7 @@ class Enemy(Flyer):
         
 
 def main():
+    flag = 0
     player = Player("戦闘機.jpg", x, y, 5, 5)
     enemy1 = Enemy("monster06.png", 200, 200, 10, 0)
     enemy2 = Enemy("monster06.png", 100, 100, 10, 0)
@@ -99,18 +100,22 @@ def main():
         player.move()
         enemy1.move()
         enemy2.move()
-        xy1 = enemy1.move()
+        #xy1 = enemy1.move()
         xy2 = enemy2.move()
         player.draw(screen)
-        enemy1.draw(screen)
+        #enemy1.draw(screen)
         enemy2.draw(screen)
-        
+        if flag == 0:
+            xy1 = enemy1.move()
+            enemy1.draw(screen)
+        if flag == 1:
+            enemy1.kill()
         # 5,bullet_listの内容をfor in ループで回す。
         for bullet in bullet_list:
             bullet.move()
             bullet.draw()
             if bullet.draw() > xy1[0] and bullet.draw() < xy1[1]:
-                pass #ここから＊＊＊＊＊＊＊＊＊＊＊
+                flag = 1
         #リストからスクリーン範囲外のbulletをクリーンアップ
         bullet_list = list(filter(lambda x: not x.is_destroy, bullet_list))
 
